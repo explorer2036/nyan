@@ -2,4 +2,7 @@
 
 git add .
 git commit -m "update few changes" .
-git push
+git push <<EOF
+explorer2036
+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
+EOF

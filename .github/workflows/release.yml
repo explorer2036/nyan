@@ -20,8 +20,8 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
-          args: release --config=./.goreleaser-for-linux.yml --clean --snapshot --skip=publish
-
+          version: latest
+          args: release --config=.goreleaser-for-linux.yml --rm-dist --verbose
   # windows-job:
   #   runs-on: windows-latest
   #   steps:

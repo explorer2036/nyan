@@ -8,23 +8,27 @@ snapshot:
 report_sizes: true
 
 builds:
-  - env:
-      - CGO_ENABLED=1
-    goos:
-      - linux
-    goarch:
-      - amd64
-    ldflags:
-      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
-
   # - env:
   #     - CGO_ENABLED=1
   #   goos:
-  #     - darwin
+  #     - linux
   #   goarch:
   #     - amd64
   #   ldflags:
   #     - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
+
+  - env:
+      - CGO_ENABLED=1
+      - PKG_CONFIG_SYSROOT_DIR=/sysroot/macos/amd64
+      - PKG_CONFIG_PATH=/sysroot/macos/amd64/usr/local/lib/pkgconfig
+      - CC=o64-clang
+      - CXX=o64-clang++
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
 
 checksum:
   name_template: 'checksums.txt'

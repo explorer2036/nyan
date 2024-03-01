@@ -1,0 +1,31 @@
+before:
+  hooks:
+    - go mod tidy
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+report_sizes: true
+
+builds:
+  - env:
+      - CGO_ENABLED=1
+    goos:
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}  
+
+checksum:
+  name_template: 'checksums.txt'
+
+archives:
+  - name_template: '{{ .ProjectName }}_{{ title .Os }}_{{ .Arch }}'
+    format_overrides:
+      - goos: windows
+        format: zip
+
+release:
+  name_template: "v{{ .Version }}"

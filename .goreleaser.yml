@@ -8,12 +8,21 @@ snapshot:
 report_sizes: true
 
 builds:
-  - env:
+  - id: "linux-amd64"
+    env:
       - CGO_ENABLED=1
     goos:
       - linux
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
+
+  - id: "darwin-amd64"
+    env:
+      - CGO_ENABLED=1
+    goos:
       - darwin
-      - windows
     goarch:
       - amd64
     ldflags:

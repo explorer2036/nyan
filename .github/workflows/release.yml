@@ -1,4 +1,4 @@
-name: Go Build & Publish
+name: Go Build
 on:
   push:
     branches:
@@ -6,9 +6,9 @@ on:
   pull_request:
 
 jobs:
-  linux-build:
+  linux-job:
     runs-on: ubuntu-latest
-    name: Linux Build & Publish
+    name: Linux Build
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,26 +19,26 @@ jobs:
           go-version: '1.21'
 
       - name: Run GoReleaser
-        if: runner.os == 'linux'
+        if: runner.os == 'Linux'
         uses: goreleaser/goreleaser-action@v5
         with:
           args: release --clean --snapshot --skip-publish
 
-  windows-build:
-    runs-on: windows-latest
-    name: Linux Build & Publish
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  # windows-job:
+  #   runs-on: windows-latest
+  #   name: Windows Build
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
+  #     - uses: actions/setup-go@v5
+  #       with:
+  #         go-version: '1.21'
 
-      - name: Run GoReleaser
-        if: runner.os == 'windows'
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          args: release --clean --snapshot --skip-publish
+  #     - name: Run GoReleaser
+  #       if: runner.os == 'windows'
+  #       uses: goreleaser/goreleaser-action@v5
+  #       with:
+  #         args: release --clean --snapshot --skip-publish
 

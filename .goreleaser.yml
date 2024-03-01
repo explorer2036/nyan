@@ -9,16 +9,13 @@ report_sizes: true
 
 builds:
   - env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
       - linux
       - darwin
       - windows
     goarch:
       - amd64
-    ignore:
-      - goos: windows
-        goarch: arm64
     ldflags:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
 

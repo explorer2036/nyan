@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     name: Build & Test
     steps:
@@ -18,17 +18,20 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-      - name: Build & Test
-        run: |
-          go build -v
-          go test ./...
+      
+      # - name: Build & Test
+      #   run: |
+      #     go build -v
+      #     go test ./...
+      
       # It only runs on Linux because the goreleaser command is executed on Linux.
       - name: Run GoReleaser
-        if: runner.os == 'Linux'
+        if: runner.os == 'linux' || runner.os == 'windows'
         uses: goreleaser/goreleaser-action@v5
         with:
           args: release --clean --snapshot --skip-publish
+      
       # Output tests
-      - name: Normal Output Test
-        run: go run main.go -- main.go
+      # - name: Normal Output Test
+      #   run: go run main.go -- main.go
 

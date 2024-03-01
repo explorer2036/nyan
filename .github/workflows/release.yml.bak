@@ -19,6 +19,5 @@ jobs:
       - name: Release via goreleaser
         uses: goreleaser/goreleaser-action@v5
         with:
-          args: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          args: release --clean --snapshot
+

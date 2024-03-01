@@ -21,38 +21,39 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
-          args: release --id "linux" --clean --snapshot --skip-publish
+          # args: release --id "linux" --clean --snapshot --skip-publish
+          args: release -h
 
-  windows-job:
-    runs-on: windows-latest
-    name: Windows Build
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  # windows-job:
+  #   runs-on: windows-latest
+  #   name: Windows Build
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
+  #     - uses: actions/setup-go@v5
+  #       with:
+  #         go-version: '1.21'
 
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          args: release --id "windows" --clean --snapshot --skip-publish
+  #     - name: Run GoReleaser
+  #       uses: goreleaser/goreleaser-action@v5
+  #       with:
+  #         args: release --id "windows" --clean --snapshot --skip-publish
 
-  darwin-job:
-    runs-on: macos-latest
-    name: Darwin Build
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  # darwin-job:
+  #   runs-on: macos-latest
+  #   name: Darwin Build
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
+  #     - uses: actions/setup-go@v5
+  #       with:
+  #         go-version: '1.21'
 
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          args: release --id "darwin" --clean --snapshot --skip-publish
+  #     - name: Run GoReleaser
+  #       uses: goreleaser/goreleaser-action@v5
+  #       with:
+  #         args: release --id "darwin" --clean --snapshot --skip-publish

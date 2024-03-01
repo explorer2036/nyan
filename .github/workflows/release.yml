@@ -6,12 +6,9 @@ on:
   pull_request:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    name: Build & Publish
+  linux-build:
+    runs-on: ubuntu-latest
+    name: Linux Build & Publish
     steps:
       - uses: actions/checkout@v4
         with:
@@ -22,7 +19,25 @@ jobs:
           go-version: '1.21'
 
       - name: Run GoReleaser
-        # if: runner.os == 'linux' || runner.os == 'windows'
+        if: runner.os == 'linux'
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          args: release --clean --snapshot --skip-publish
+
+  windows-build:
+    runs-on: windows-latest
+    name: Linux Build & Publish
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Run GoReleaser
+        if: runner.os == 'windows'
         uses: goreleaser/goreleaser-action@v5
         with:
           args: release --clean --snapshot --skip-publish

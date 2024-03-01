@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  release_matrix:
+  builds:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -37,57 +37,3 @@ jobs:
         uses: goreleaser/goreleaser-action@v5
         with:
           args: release --config .goreleaser-for-darwin.yml --clean --snapshot --skip=publish
-
-
-  # windows-job:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - uses: actions/setup-go@v5
-  #       with:
-  #         go-version: '1.21'
-
-  #     - name: Run GoReleaser
-  #       uses: goreleaser/goreleaser-action@v5
-  #       with:
-  #         args: release --config .goreleaser-for-windows.yml --clean --snapshot --skip=publish
-
-  # darwin-job:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - uses: actions/setup-go@v5
-  #       with:
-  #         go-version: '1.21'
-
-  #     - name: Run GoReleaser
-  #       uses: goreleaser/goreleaser-action@v5
-  #       with:
-  #         args: release --config=.goreleaser-for-darwin.yml --clean --snapshot --skip=publish
-  
-  # linux-job:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-                
-  #     - uses: actions/setup-go@v5
-  #       with:
-  #         go-version: '1.21'
-
-  #     - name: Install cross-compiler for linux/arm64
-  #       run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-gnu
-
-  #     - name: Run GoReleaser
-  #       uses: goreleaser/goreleaser-action@v5
-  #       with:
-  #         version: latest
-  #         args: release --config=.goreleaser-for-linux.yml --clean --snapshot --skip=publish
-  

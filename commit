@@ -1,9 +1,8 @@
 #!/bin/bash
 
 project=`basename $(git rev-parse --show-toplevel)`
-echo $project
 password="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"
 
 git add .
 git commit -m "update few changes" .
-git push --repo https://explorer2036@github.com/explorer2036/$project.git
+git push --repo https://explorer2036:${password}@github.com/explorer2036/${project}.git

@@ -6,5 +6,4 @@ password="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"
 
 git add .
 git commit -m "update few changes" .
-git push
 git push --repo https://explorer2036@github.com/explorer2036/$project.git

@@ -1,8 +1,9 @@
 name: Release with goreleaser
 on:
   push:
-    tags:
-      - v*.*.*
+    branches:
+      - 'main'
+  pull_request:
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -20,4 +21,4 @@ jobs:
         with:
           args: release
         env:
-          GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

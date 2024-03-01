@@ -21,7 +21,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
-          args: release --config=.goreleaser-for-linux.yml --rm-dist --verbose
+          args: release --config=.goreleaser-for-linux.yml --clean --skip=publish
   # windows-job:
   #   runs-on: windows-latest
   #   steps:

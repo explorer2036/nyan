@@ -8,8 +8,7 @@ snapshot:
 report_sizes: true
 
 builds:
-  - id: "linux-amd64"
-    env:
+  - env:
       - CGO_ENABLED=1
     goos:
       - linux
@@ -18,15 +17,14 @@ builds:
     ldflags:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
 
-  - id: "darwin-amd64"
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - darwin
-    goarch:
-      - amd64
-    ldflags:
-      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
+  # - env:
+  #     - CGO_ENABLED=1
+  #   goos:
+  #     - darwin
+  #   goarch:
+  #     - amd64
+  #   ldflags:
+  #     - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
 
 checksum:
   name_template: 'checksums.txt'

@@ -19,6 +19,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
-          args: release --config .goreleaser.yml --clean --skip=announce,validate
+          # args: release --config .goreleaser.yml --clean --skip=announce,validate
+          args: release -h
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

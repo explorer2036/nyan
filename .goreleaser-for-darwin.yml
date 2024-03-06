@@ -14,8 +14,8 @@ builds:
       - darwin
     goarch:
       - amd64
-      - arm64
-      - '386'
+      # - arm64
+      # - '386'
     ldflags:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
 
@@ -24,9 +24,6 @@ checksum:
 
 archives:
   - name_template: '{{ .ProjectName }}_{{ title .Os }}_{{ .Arch }}'
-    format_overrides:
-      - goos: windows
-        format: zip
 
 release:
   name_template: "v{{ .Version }}"

@@ -12,11 +12,11 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      - freebsd
+      # - freebsd
     goarch:
       - amd64
-      - arm64
-      - '386'
+      # - arm64
+      # - '386'
     flags:
       - -trimpath
     ldflags:
@@ -27,9 +27,6 @@ checksum:
 
 archives:
   - name_template: '{{ .ProjectName }}_{{ title .Os }}_{{ .Arch }}'
-    format_overrides:
-      - goos: windows
-        format: zip
 
 release:
   name_template: "v{{ .Version }}"

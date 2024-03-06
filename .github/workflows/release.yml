@@ -1,9 +1,8 @@
 name: Go Build
 on:
   push:
-    branches:
-      - 'main'
-  pull_request:
+    tags:
+      - '*'
 
 jobs:
   builds:

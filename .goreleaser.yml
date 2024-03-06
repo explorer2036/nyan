@@ -24,7 +24,7 @@ builds:
     binary: '{{ .ProjectName }}_v{{ .Version }}'
 
 checksum:
-  name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_{{ .Runtime.Goarch }}_SHA256SUMS'
+  name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_checksums.txt'
 
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'

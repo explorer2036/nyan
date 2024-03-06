@@ -24,16 +24,16 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: goreleaser/goreleaser-action@v5
         with:
-          args: release --config .goreleaser-for-linux.yml --clean --snapshot --skip=publish
+          args: release --config .goreleaser-for-linux.yml --clean --skip=announce,validate
       
-      - name: Run GoReleaser for windows
-        if: matrix.os == 'windows-latest'
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          args: release --config .goreleaser-for-windows.yml --clean --snapshot --skip=publish
+      # - name: Run GoReleaser for windows
+      #   if: matrix.os == 'windows-latest'
+      #   uses: goreleaser/goreleaser-action@v5
+      #   with:
+      #     args: release --config .goreleaser-for-windows.yml --clean --snapshot --skip=publish
 
-      - name: Run GoReleaser for darwin
-        if: matrix.os == 'macos-latest'
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          args: release --config .goreleaser-for-darwin.yml --clean --snapshot --skip=publish
+      # - name: Run GoReleaser for darwin
+      #   if: matrix.os == 'macos-latest'
+      #   uses: goreleaser/goreleaser-action@v5
+      #   with:
+      #     args: release --config .goreleaser-for-darwin.yml --clean --snapshot --skip=publish

@@ -31,10 +31,12 @@ jobs:
 
       - name: Generate sha256 checksums and GPG signature
         run: |
-          sudo apt-get install tree
-          tree dist
-
-          [ -d dist ] && cd dist
+          if [ ! -d dist ]; then
+            echo "No dist folder"
+            exit 1
+          fi
+          cd dist
+          
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
           checksums=${repo_name}_${version}_SHA256SUMS
@@ -45,6 +47,8 @@ jobs:
 
           gpg --batch --local-user ${{ steps.gpg.outputs.fingerprint }} --output ${checksums}.sig --detach-sign ${checksums}
           gpg --verify ${checksums}.sig ${checksums}
+
+          ls -al
 
 # jobs:
 #   builds:

@@ -24,8 +24,10 @@ builds:
     binary: '{{ .ProjectName }}_v{{ .Version }}'
 
 checksum:
-  disable: true
   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_checksums.txt'
+
+signs:
+  - artifacts: checksum
 
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'

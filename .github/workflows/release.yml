@@ -62,7 +62,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ steps.merge.outputs.filename }}
-        asset_name: $${{ steps.merge.outputs.filename }}
+        asset_name: ${{ steps.merge.outputs.filename }}
         tag: ${{ github.ref }}
         overwrite: true
 

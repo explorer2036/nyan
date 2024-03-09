@@ -53,23 +53,18 @@ jobs:
     - name: Merge all checksums assets
       run: cat downloaded/*_checksums.txt > ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
     
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release please
+      uses: google-github-actions/release-please-action@v3
+      id: release
       with:
-        tag_name: ${{ github.ref }}
-
+        release-type: simple
+        bump-minor-pre-major: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
     - name: Upload the merged checksums
-      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
-        asset_path: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
-        asset_content_type: text/plain
+      run: gh release upload ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1

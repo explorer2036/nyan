@@ -14,6 +14,7 @@ jobs:
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
+      - run: echo ${{ github.event.repository.name }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -48,10 +49,11 @@ jobs:
     needs: builds
     runs-on: ubuntu-latest
     steps:
+    - run: echo ${{ github.event.repository.name }}
     - name: Download all checksums artifacts
       uses: actions/download-artifact@v4
       with:
         path: checksums
         pattern: "*_checksums.txt"
         merge-multiple: true
-    - run: ls -R checksums
+    # - run: ls -R checksums

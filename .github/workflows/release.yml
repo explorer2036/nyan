@@ -56,7 +56,15 @@ jobs:
       run: |
         cat downloaded/*_checksums.txt > ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
         echo "filename=${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt" >> $GITHUB_OUTPUT
-    
+  
+    - name: Delete the checksums assets
+      uses: mknejp/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.ref_name }}
+        repository: ${{ github.repository }}
+        assets: "*_checksums.txt"
+
     - name: Upload the merged checksums
       uses: svenstaro/upload-release-action@v2
       with:
@@ -65,11 +73,3 @@ jobs:
         asset_name: ${{ steps.merge.outputs.filename }}
         tag: ${{ github.ref }}
         overwrite: true
-
-    - name: Delete the checksums assets
-      uses: mknejp/delete-release-assets@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref_name }}
-        repository: ${{ github.repository }}
-        assets: "*_checksums.txt"

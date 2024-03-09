@@ -34,14 +34,27 @@ jobs:
           sudo apt-get install tree
           tree dist
 
+          # calculate sha256sum
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
-          target=${repo_name}_${version}_SHA256SUMS
+          sha256sum=${repo_name}_${version}_SHA256SUMS
           for entry in `ls dist/*.zip`; do
-            sha256sum $entry >> ${target}
+            zipfile=$(echo $entry | awk -F'/' '{print $NF}')
+            sha256sum $zipfile >> ${sha256sum}
           done
+          cat ${sha256sum}
 
-          cat ${target}
+          # - "--batch"
+          # - "--local-user"
+          # - "{{ .Env.GPG_FINGERPRINT }}"
+          # - "--output"
+          # - "${signature}"
+          # - "--detach-sign"
+          # - "${artifact}"
+          gpg --batch --local-user ${{ steps.gpg.outputs.fingerprint }} --output ${{sha256sum}}.sig --detach-sign ${{sha256sum}}
+
+          # verify signature
+          gpg --verify ${{sha256sum}}.sig ${{sha256sum}}
 
 # jobs:
 #   builds:

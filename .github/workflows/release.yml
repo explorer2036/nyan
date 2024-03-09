@@ -48,6 +48,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         path: checksums
-        pattern: *_checksums.txt
+        pattern: "*_checksums.txt"
         merge-multiple: true
     - run: ls -R checksums

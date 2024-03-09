@@ -62,12 +62,18 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Upload the merged checksums
-      uses: actions/upload-release-asset@v1
+      if: ${{ steps.release.outputs.release_created }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
+      run: gh release upload ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
+
+    # - name: Upload the merged checksums
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.release.outputs.upload_url }}
+    #     asset_name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1

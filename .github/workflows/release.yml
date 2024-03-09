@@ -64,7 +64,7 @@ jobs:
     - name: Upload the merged checksums
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh release upload ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
+      run: gh release upload ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1

@@ -45,14 +45,16 @@ jobs:
     needs: builds
     runs-on: ubuntu-latest
     steps:
-    # echo "v1.0.4" | sed -e "s/v//"
     - id: version
       run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
-    - run: echo ${{ github.event.repository.name }} && echo ${{ steps.version.outputs.version }}
+    # - run: echo ${{ github.event.repository.name }} && echo ${{ steps.version.outputs.version }}
     - name: Download all checksums artifacts
       uses: actions/download-artifact@v4
       with:
-        path: checksums
-        pattern: "*_checksums.txt"
-        merge-multiple: true
-    # - run: ls -R checksums
+        # nyan_1.0.7_linux_checksums.txt
+        name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt
+        path: downloaded
+
+    # nyan_1.0.7_linux_checksums.txt
+
+    - run: ls -R downloaded

@@ -29,11 +29,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: install Tree
+      - name: Generate sha256 checksums and GPG signature
         run: |
           sudo apt-get install tree
+          tree dist
 
-          cd dist && tree dist
+          [ -d dist ] && cd dist
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
           checksums=${repo_name}_${version}_SHA256SUMS

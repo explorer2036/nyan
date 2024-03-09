@@ -20,6 +20,9 @@ builds:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
     binary: '{{ .ProjectName }}_v{{ .Version }}'
 
+checksum:
+  disable: true
+
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     format: zip

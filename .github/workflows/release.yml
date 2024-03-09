@@ -43,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  create-checksums-gpg-signature:
+  sha256sums-and-gpg-signature:
     needs: build-and-publish
     runs-on: ubuntu-latest
     steps:

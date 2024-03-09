@@ -39,21 +39,6 @@ jobs:
     needs: builds
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-    
     - name: Get version from tag name
       id: version
       run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
@@ -68,18 +53,18 @@ jobs:
     - name: Merge all checksums assets
       run: cat downloaded/*_checksums.txt > ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
     
-    # - name: Release please
-    #   uses: google-github-actions/release-please-action@v3
-    #   id: release
-    #   with:
-    #     release-type: simple
-    #     bump-minor-pre-major: true
-    #     token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release please
+      uses: google-github-actions/release-please-action@v3
+      id: release
+      with:
+        release-type: simple
+        bump-minor-pre-major: true
+        token: ${{ secrets.GITHUB_TOKEN }}
     
-    # - name: Upload the merged checksums
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   run: gh release upload ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
+    - name: Upload the merged checksums
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release upload ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1

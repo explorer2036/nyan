@@ -50,10 +50,10 @@ jobs:
     # - run: echo ${{ github.event.repository.name }} && echo ${{ steps.version.outputs.version }}
     - name: Download all checksums artifacts
       uses: actions/download-artifact@v4
-      with:
-        # nyan_1.0.7_linux_checksums.txt
-        name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt
-        path: downloaded
+      # with:
+      #   # nyan_1.0.7_linux_checksums.txt
+      #   name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt
+      #   path: downloaded
 
     # nyan_1.0.7_linux_checksums.txt
 

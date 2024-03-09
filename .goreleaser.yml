@@ -12,26 +12,17 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      # - freebsd
+      - freebsd
     goarch:
       - amd64
       - arm64
-      # - '386'
+      - '386'
     flags:
       - -trimpath
     ldflags:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
     binary: '{{ .ProjectName }}_v{{ .Version }}'
 
-# checksum:
-#   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_checksums.txt'
-
-# signs:
-#   - artifacts: checksum
-
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     format: zip
-
-# release:
-#   name_template: "v{{ .Version }}"

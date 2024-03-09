@@ -5,8 +5,12 @@ on:
       - '*'
 
 jobs:
-  builds:
-    runs-on: ubuntu-latest
+  build-and-publish:
+    strategy:
+      matrix:
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -15,40 +19,90 @@ jobs:
         with:
           go-version: '1.21'
 
-      - name: import GPG key
-        id: gpg
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-
-      - name: run GoReleaser for linux
+      - name: Run GoReleaser for linux
+        if: matrix.os == 'ubuntu-latest'
         uses: goreleaser/goreleaser-action@v5
         with:
           args: release --config .goreleaser.yml --clean --skip=announce,validate
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate sha256 checksums and GPG signature
+      - name: Run GoReleaser for darwin
+        if: matrix.os == 'macos-latest'
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          args: release --config .goreleaser-darwin.yml --clean --skip=announce,validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+
+      - name: Run GoReleaser for windows
+        if: matrix.os == 'windows-latest'
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          args: release --config .goreleaser-windows.yml --clean --skip=announce,validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-checksums-gpg-signature:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Import GPG key
+        id: gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+      
+      - name: Download published archives
+        uses: robinraju/release-downloader@v1.9
+        with:
+          repository: ${{ github.repository }}
+          tag: ${{ github.ref_name }}
+          fileName: "*.zip"
+          out-file-path: "archives"
+
+      - name: Generate the sha256 checksums and GPG signature
+        id: generate
         run: |
-          if [ ! -d dist ]; then
-            echo "No dist folder"
+          if [ ! -d archives ]; then
+            echo "No archives folder"
             exit 1
           fi
-          cd dist
           
+          cd archives
+          # generate the sha256 checksums
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
           checksums=${repo_name}_${version}_SHA256SUMS
           for entry in `ls *.zip`; do
             sha256sum ${entry} >> ${checksums}
           done
-          cat ${checksums}
-
+          
+          # generate the GPG signature
           gpg --batch --local-user ${{ steps.gpg.outputs.fingerprint }} --output ${checksums}.sig --detach-sign ${checksums}
           gpg --verify ${checksums}.sig ${checksums}
 
-          ls -al
+          echo "checksums=${checksums}" >> $GITHUB_OUTPUT
+          echo "signature=${checksums}.sig" >> $GITHUB_OUTPUT
+  
+      - name: Upload the sha256 checksums
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.generate.outputs.checksums }}
+          tag: ${{ github.ref }}
+          file_glob: true
+          overwrite: true
+
+      - name: Upload the GPG signature
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.generate.outputs.checksums }}
+          tag: ${{ github.ref }}
+          file_glob: true
+          overwrite: true
 
 # jobs:
 #   builds:

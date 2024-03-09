@@ -39,16 +39,6 @@ jobs:
     needs: builds
     runs-on: ubuntu-latest
     steps:
-    - uses: google-github-actions/release-please-action@v4
-      id: release
-      with:
-        release-type: simple
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
     - name: Get version from tag name
       id: version
       run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
@@ -68,9 +58,13 @@ jobs:
         echo "filename=${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt" >> $GITHUB_OUTPUT
     
     - name: Upload the merged checksums
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh release upload ${{ steps.merge.outputs.filename }} ${{ steps.merge.outputs.filename }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ${{ steps.merge.outputs.filename }}
+        asset_name: $${{ steps.merge.outputs.filename }}
+        tag: ${{ github.ref }}
+        overwrite: true
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1

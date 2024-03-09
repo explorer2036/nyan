@@ -56,7 +56,6 @@ jobs:
       #   path: downloaded
 
     - uses: mknejp/delete-release-assets@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        token: ${{ github.token }}
         assets: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt

@@ -60,16 +60,11 @@ jobs:
           repository: ${{ github.repository }}
           tag: ${{ github.ref_name }}
           fileName: "*.zip"
-          out-file-path: "archives"
+          out-file-path: "artifacts"
 
       - name: Generate the sha256 checksums and GPG signature
         id: generate
         run: |
-          if [ ! -d artifacts ]; then
-            echo "No artifacts folder"
-            exit 1
-          fi
-          
           cd artifacts
           # generate the sha256 checksums
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')

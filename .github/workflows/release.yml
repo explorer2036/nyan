@@ -32,14 +32,13 @@ jobs:
       - name: install Tree
         run: |
           sudo apt-get install tree
-          tree dist
 
+          cd dist && tree dist
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
           checksums=${repo_name}_${version}_SHA256SUMS
-          for entry in `ls dist/*.zip`; do
-            zipfile=$(echo $entry | awk -F'/' '{print $NF}')
-            sha256sum ${zipfile} >> ${checksums}
+          for entry in `ls *.zip`; do
+            sha256sum ${entry} >> ${checksums}
           done
           cat ${checksums}
 

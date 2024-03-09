@@ -58,4 +58,6 @@ jobs:
     - uses: mknejp/delete-release-assets@v1
       with:
         token: ${{ github.token }}
+        tag: ${{ github.ref_name }}
+        repository: ${{ github.repository }}
         assets: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt

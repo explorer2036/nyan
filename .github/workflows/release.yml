@@ -35,11 +35,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-  download:
+  merge-checksums:
     needs: builds
     runs-on: ubuntu-latest
     steps:
-    - id: version
+    - name: Get version from tag name
+      id: version
       run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
 
     - name: Download all checksums assets
@@ -49,15 +50,29 @@ jobs:
         tag: ${{ github.ref_name }}
         fileName: "*_checksums.txt"
         out-file-path: "downloaded"
-    - run: ls -al downloaded
-
     - name: Merge all checksums assets
-      run: cat downloaded/*_checksums.txt > checksums.txt && cat checksums.txt
+      run: cat downloaded/*_checksums.txt > ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
+    
+    - name: Release please
+      uses: google-github-actions/release-please-action@v3
+      id: release
+      with:
+        release-type: simple
+        bump-minor-pre-major: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload the merged checksums
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1
       with:
-        token: ${{ github.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.ref_name }}
         repository: ${{ github.repository }}
         assets: "*_checksums.txt"

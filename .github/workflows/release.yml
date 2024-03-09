@@ -65,12 +65,12 @@ jobs:
       - name: Generate the sha256 checksums and GPG signature
         id: generate
         run: |
-          if [ ! -d archives ]; then
-            echo "No archives folder"
+          if [ ! -d artifacts ]; then
+            echo "No artifacts folder"
             exit 1
           fi
           
-          cd archives
+          cd artifacts
           # generate the sha256 checksums
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
@@ -81,7 +81,6 @@ jobs:
           
           # generate the GPG signature
           gpg --batch --local-user ${{ steps.gpg.outputs.fingerprint }} --output ${checksums}.sig --detach-sign ${checksums}
-          gpg --verify ${checksums}.sig ${checksums}
 
           echo "checksums=${checksums}" >> $GITHUB_OUTPUT
           echo "signature=${checksums}.sig" >> $GITHUB_OUTPUT
@@ -90,18 +89,18 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ steps.generate.outputs.checksums }}
+          file: artifacts/${{ steps.generate.outputs.checksums }}
+          asset_name: ${{ steps.generate.outputs.checksums }}
           tag: ${{ github.ref }}
-          file_glob: true
           overwrite: true
 
       - name: Upload the GPG signature
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ steps.generate.outputs.checksums }}
+          file: artifacts/${{ steps.generate.outputs.signature }}
+          asset_name: ${{ steps.generate.outputs.signature }}
           tag: ${{ github.ref }}
-          file_glob: true
           overwrite: true
 
 # jobs:

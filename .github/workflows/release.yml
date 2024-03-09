@@ -34,29 +34,17 @@ jobs:
           sudo apt-get install tree
           tree dist
 
-          # calculate sha256sum for all artifacts
           version=$(echo ${{ github.ref_name }} | sed -e 's/v//')
           repo_name=${{ github.event.repository.name }}
           checksums=${repo_name}_${version}_SHA256SUMS
           for entry in `ls dist/*.zip`; do
             zipfile=$(echo $entry | awk -F'/' '{print $NF}')
-            sha256sum $zipfile >> ${checksums}
+            sha256sum ${zipfile} >> ${checksums}
           done
           cat ${checksums}
 
-          # - "--batch"
-          # - "--local-user"
-          # - "{{ .Env.GPG_FINGERPRINT }}"
-          # - "--output"
-          # - "${signature}"
-          # - "--detach-sign"
-          # - "${artifact}"
-
-          # create detached GPG signature
-          gpg --batch --local-user ${{ steps.gpg.outputs.fingerprint }} --output ${{checksums}}.sig --detach-sign ${{checksums}}
-
-          # verify detached GPG signature
-          gpg --verify ${{checksums}}.sig ${{checksums}}
+          gpg --batch --local-user ${{ steps.gpg.outputs.fingerprint }} --output ${checksums}.sig --detach-sign ${checksums}
+          gpg --verify ${checksums}.sig ${checksums}
 
 # jobs:
 #   builds:

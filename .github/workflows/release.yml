@@ -43,7 +43,7 @@ jobs:
       run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
 
     - name: Download all checksums assets
-    - uses: robinraju/release-downloader@v1.9
+      uses: robinraju/release-downloader@v1.9
       with:
         repository: ${{ github.repository }}
         tag: ${{ github.ref_name }}

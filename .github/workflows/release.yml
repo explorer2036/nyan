@@ -13,9 +13,10 @@ jobs:
         arch: ['x86','x64']
     outputs:
       ${{ matrix.os }}_${{ matrix.arch }}_result: ${{ steps.step1.outputs.test }}
+    
     steps:
       - id: step1
-        run: "test=${{ matrix.os }} - ${{ matrix.arch }}" >> $GITHUB_OUTPUT
+        run: echo "test=${{ matrix.os }} - ${{ matrix.arch }}" >> $GITHUB_OUTPUT
 
   job2:
     runs-on: ubuntu-latest

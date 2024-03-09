@@ -34,6 +34,15 @@ jobs:
           sudo apt-get install tree
           tree dist
 
+          version=$(echo ${{ github.ref_name }} | sed -e 's/v//')"
+          repo_name=${{ github.event.repository.name }}
+          target=${repo_name}_${version}_SHA256SUMS
+          for entry in `ls dist/*.zip`; do
+            sha256sum $entry >> ${target}
+          done
+
+          cat ${target}
+
 # jobs:
 #   builds:
 #     strategy:

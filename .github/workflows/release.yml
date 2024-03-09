@@ -11,10 +11,11 @@ jobs:
         # os: [ubuntu-latest, windows-latest, macos-latest]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    outputs:
-      status: ${{ steps.status.outputs.status }}
     steps:
-      - run: echo ${{ github.event.repository.name }} && echo ${{ github.ref_name }}
+      - id: get_version
+        name: Get version from tag
+        uses: jannemattila/get-version-from-tag@v3
+      - run: echo ${{ github.event.repository.name }} && echo ${{ steps.get_version.outputs.version }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0

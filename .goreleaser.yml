@@ -24,6 +24,7 @@ builds:
     binary: '{{ .ProjectName }}_v{{ .Version }}'
 
 checksum:
+  disable: true
   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_checksums.txt'
 
 archives:

@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -27,49 +27,49 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run GoReleaser for darwin
-        if: matrix.os == 'macos-latest'
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          args: release --config .goreleaser-darwin.yml --clean --skip=announce,validate
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Run GoReleaser for darwin
+      #   if: matrix.os == 'macos-latest'
+      #   uses: goreleaser/goreleaser-action@v5
+      #   with:
+      #     args: release --config .goreleaser-darwin.yml --clean --skip=announce,validate
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-  merge-checksums:
-    needs: builds
-    runs-on: ubuntu-latest
-    steps:
-    - name: Get version from tag name
-      id: version
-      run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
+  # merge-checksums:
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Get version from tag name
+  #     id: version
+  #     run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
     
-    - name: Download all checksums assets
-      uses: robinraju/release-downloader@v1.9
-      with:
-        repository: ${{ github.repository }}
-        tag: ${{ github.ref_name }}
-        fileName: "*_checksums.txt"
-        out-file-path: "downloaded"
+  #   - name: Download all checksums assets
+  #     uses: robinraju/release-downloader@v1.9
+  #     with:
+  #       repository: ${{ github.repository }}
+  #       tag: ${{ github.ref_name }}
+  #       fileName: "*_checksums.txt"
+  #       out-file-path: "downloaded"
     
-    - name: Merge all checksums assets
-      id: merge
-      run: |
-        cat downloaded/*_checksums.txt > ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
-        echo "filename=${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt" >> $GITHUB_OUTPUT
+  #   - name: Merge all checksums assets
+  #     id: merge
+  #     run: |
+  #       cat downloaded/*_checksums.txt > ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt
+  #       echo "filename=${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_checksums.txt" >> $GITHUB_OUTPUT
   
-    - name: Delete the checksums assets
-      uses: mknejp/delete-release-assets@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref_name }}
-        repository: ${{ github.repository }}
-        assets: "*_checksums.txt"
+  #   - name: Delete the checksums assets
+  #     uses: mknejp/delete-release-assets@v1
+  #     with:
+  #       token: ${{ secrets.GITHUB_TOKEN }}
+  #       tag: ${{ github.ref_name }}
+  #       repository: ${{ github.repository }}
+  #       assets: "*_checksums.txt"
 
-    - name: Upload the merged checksums
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ steps.merge.outputs.filename }}
-        asset_name: ${{ steps.merge.outputs.filename }}
-        tag: ${{ github.ref }}
-        overwrite: true
+  #   - name: Upload the merged checksums
+  #     uses: svenstaro/upload-release-action@v2
+  #     with:
+  #       repo_token: ${{ secrets.GITHUB_TOKEN }}
+  #       file: ${{ steps.merge.outputs.filename }}
+  #       asset_name: ${{ steps.merge.outputs.filename }}
+  #       tag: ${{ github.ref }}
+  #       overwrite: true

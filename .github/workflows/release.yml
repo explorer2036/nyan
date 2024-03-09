@@ -33,13 +33,13 @@ jobs:
       #   with:
       #     args: release --config .goreleaser-windows.yml --clean --skip=announce,validate
 
-      # - name: Run GoReleaser for darwin
-      #   if: matrix.os == 'macos-latest'
-      #   uses: goreleaser/goreleaser-action@v5
-      #   with:
-      #     args: release --config .goreleaser-darwin.yml --clean --skip=announce,validate
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run GoReleaser for darwin
+        if: matrix.os == 'macos-latest'
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          args: release --config .goreleaser-darwin.yml --clean --skip=announce,validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   download:
     needs: builds
@@ -48,16 +48,19 @@ jobs:
     - id: version
       run: echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//')" >> $GITHUB_OUTPUT
 
-    # - name: Download all checksums artifacts
-    #   uses: actions/download-artifact@v4
-      # with:
-      #   # nyan_1.0.7_linux_checksums.txt
-      #   name: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt
-      #   path: downloaded
+    - name: Download all checksums assets
+    - uses: robinraju/release-downloader@v1.9
+      with:
+        repository: ${{ github.repository }}
+        tag: ${{ github.ref_name }}
+        fileName: "*_checksums.txt"
+    
+    - run: ls -al
 
-    - uses: mknejp/delete-release-assets@v1
+    - name: Delete the checksums assets
+      uses: mknejp/delete-release-assets@v1
       with:
         token: ${{ github.token }}
         tag: ${{ github.ref_name }}
         repository: ${{ github.repository }}
-        assets: ${{ github.event.repository.name }}_${{ steps.version.outputs.version }}_linux_checksums.txt
+        assets: '*_checksums.txt'

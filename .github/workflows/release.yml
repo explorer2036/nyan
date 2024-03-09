@@ -48,8 +48,11 @@ jobs:
         repository: ${{ github.repository }}
         tag: ${{ github.ref_name }}
         fileName: "*_checksums.txt"
-    
-    - run: ls -al
+        out-file-path: "downloaded"
+    - run: ls -al downloaded
+
+    - name: Merge all checksums assets
+      run: cat downloaded/*_checksums.txt > checksums.txt && cat checksums.txt
 
     - name: Delete the checksums assets
       uses: mknejp/delete-release-assets@v1
@@ -57,4 +60,4 @@ jobs:
         token: ${{ github.token }}
         tag: ${{ github.ref_name }}
         repository: ${{ github.repository }}
-        assets: '*_checksums.txt'
+        assets: "*_checksums.txt"

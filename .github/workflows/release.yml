@@ -47,7 +47,7 @@ jobs:
           token: ${{ steps.create-token.outputs.token }}
 
   build-and-publish:
-    needs: token-and-fingerprint
+    needs: prepare
     strategy:
       matrix:
         # os: [ubuntu-latest, windows-latest, macos-latest]

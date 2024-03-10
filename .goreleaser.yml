@@ -7,7 +7,7 @@ snapshot:
 
 report_sizes: true
 
-builds:
+linux-builds:
   - env:
       - CGO_ENABLED=0
     goos:
@@ -22,6 +22,19 @@ builds:
     ldflags:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
     binary: '{{ .ProjectName }}_v{{ .Version }}'
+
+windows-builds:
+  - env:
+      - CGO_ENABLED=1
+    goos:
+      - windows
+    goarch:
+      - amd64
+      - arm64
+      # - '386'
+    ldflags:
+      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
+    binary: '{{ .ProjectName }}_v{{ .Version }}.exe'
 
 checksum:
   disable: true

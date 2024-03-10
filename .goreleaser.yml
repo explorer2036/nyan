@@ -1,8 +1,9 @@
 builds:
-  - id: linux-binaries
-    env:
-      - CGO_ENABLED=0
+  - env:
+      - CGO_ENABLED={{ if eq .Os "windows"}}1{{else}}{{if eq .Os "darwin"}}1{{else}}0{{end}}{{end}}
     goos:
+      - windows
+      - darwin
       - linux
       - freebsd
     goarch:
@@ -15,32 +16,6 @@ builds:
       - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
     binary: '{{ .ProjectName }}_v{{ .Version }}'
  
-  - id: windows-binaries
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - windows
-    goarch:
-      - amd64
-      - arm64
-      - '386'
-    ldflags:
-      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
-    binary: '{{ .ProjectName }}_v{{ .Version }}.exe'
- 
-  - id: darwin-binaries
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-      - '386'
-    ldflags:
-      - -s -w -X github.com/toshimaru/nyan/cmd.version={{.Version}}
-    binary: '{{ .ProjectName }}_v{{ .Version }}'
-
 checksum:
   disable: true
 

@@ -1,15 +1,16 @@
 builds:
   - env:
-      - CGO_ENABLED={{ if eq .Os "windows"}}1{{else}}{{if eq .Os "darwin"}}1{{else}}0{{end}}{{end}}
+      # - CGO_ENABLED={{ if eq .Os "windows"}}1{{else}}{{if eq .Os "darwin"}}1{{else}}0{{end}}{{end}}
+      - CGO_ENABLED=0
     goos:
-      - windows
-      - darwin
+      # - windows
+      # - darwin
       - linux
-      - freebsd
+      # - freebsd
     goarch:
       - amd64
-      - arm64
-      - '386'
+      # - arm64
+      # - '386'
     flags:
       - -trimpath
     ldflags:
